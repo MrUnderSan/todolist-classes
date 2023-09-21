@@ -15,7 +15,7 @@ export const Task: FC<PropsType> = (props) => {
         <div key={props.task.id}>
 
             <input type={'checkbox'} checked={props.task.isDone}
-                   onChange={() => props.changeTaskStatus(props.task.id, props.task.isDone)}/>
+                   onChange={(e) => props.changeTaskStatus(props.task.id, e.currentTarget.checked)}/>
             <span>{props.task.title}</span>
             <Button name={'x'} callback={removeTaskHandler}/>
         </div>

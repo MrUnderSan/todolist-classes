@@ -8,19 +8,29 @@ export type TaskType = {
     isDone: boolean
 }
 
+type TodolistType = {
+    id: string
+    title: string
+    filter: string
+}
+
+type TasksType = {
+    [key: string] : TaskType[]
+}
+
 function App() {
 
     const todolist1 = '1'
     const todolist2 = '2'
 
-    const [todolists, srtTodolists] = useState(
+    const [todolists, setTodolists] = useState<TodolistType[]>(
         [
             {id: todolist1, title: 'Todolist 1', filter: 'all'},
             {id: todolist2, title: 'Todolist 2', filter: 'all'}
         ]
     )
 
-    const [tasks, setTasks] = useState<any>(
+    const [tasks, setTasks] = useState<TasksType>(
         {
             [todolist1]: [
                 {id: 1, title: 'To eat', isDone: true},
@@ -34,25 +44,46 @@ function App() {
         }
     )
 
-    const changeTaskStatus = (id: number, isDone: boolean) => {
-        // setTasks(tasks.map(el => el.id === id
-        //     ? {...el, isDone: !isDone}
-        //     : el))
+    const changeTaskStatus = (todolistID: string, id: number, newIsDone: boolean) => {
+
+        // const changedTasks = tasks[todolistID].map(tl=> tl.id === id ? {...tl, isDone: isDone} : tl)
+        // setTasks({...tasks, [todolistID]: changeTL})
+
+        setTasks({...tasks, [todolistID] : tasks[todolistID].map(t => t.id === id ? {...t, isDone: newIsDone} : t)})
     }
 
-    const removeTask = (id: number) => {
-        // setTasks(tasks.filter(t=>t.id !== id))
+    const removeTask = (todolistID: string, id: number) => {
+
+        setTasks({...tasks, [todolistID]: tasks[todolistID].filter(t=> t.id !== id)})
+    }
+
+    const removeTodolist = (todolistID: string) => {
+        setTodolists(todolists.filter(t=>t.id !== todolistID))
+
+        delete tasks[todolistID]
+
+        // const newTasks = {...tasks}
+        // delete newTasks[todolistID]
+        // setTasks(newTasks)
+        // на размышление
     }
 
     return (
         <div className="App">
             {todolists.map(tl => {
+                const changeStatusHandler = (id: number, newIsDone: boolean) => changeTaskStatus(tl.id, id, newIsDone)
+                // вариант без передачи todolistId в Todolist
+
                 return (
                     <Todolist
+                        key={tl.id}
+                        todolistId={tl.id}
                         title={tl.title}
                         tasks={tasks[tl.id]}
-                        changeTaskStatus={changeTaskStatus}
-                        removeTask={removeTask}/>
+                        changeTaskStatus={changeStatusHandler}
+                        removeTask={removeTask} // вариант с передачей todolistId в Todolist
+                        removeTodolist={removeTodolist}
+                    />
                 )
             })}
         </div>
