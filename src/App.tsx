@@ -68,6 +68,19 @@ function App() {
         // на размышление
     }
 
+    const addTask = (todolistId: string, title: string) => {
+        const newTask = {id: new Date().getTime(), title, isDone: false}
+        setTasks({...tasks, [todolistId]: [newTask, ...tasks[todolistId]]})
+    }
+
+    const changeTaskTitle = (todolistId: string, taskId: number, title: string) => {
+        setTasks({...tasks, [todolistId]: tasks[todolistId].map(t=> t.id === taskId ? {...t, title} : t)})
+    }
+
+    const changeTodolistTitle = (todolistId: string, title: string) => {
+        setTodolists(todolists.map(t => t.id === todolistId ? {...t, title} : t))
+    }
+
     return (
         <div className="App">
             {todolists.map(tl => {
@@ -83,6 +96,9 @@ function App() {
                         changeTaskStatus={changeStatusHandler}
                         removeTask={removeTask} // вариант с передачей todolistId в Todolist
                         removeTodolist={removeTodolist}
+                        addTask={addTask}
+                        changeTaskTitle={changeTaskTitle}
+                        changeTodolistTitle={changeTodolistTitle}
                     />
                 )
             })}
