@@ -14,7 +14,7 @@ type TodolistType = {
     filter: string
 }
 
-type TasksType = {
+export type TasksType = {
     [key: string] : TaskType[]
 }
 
@@ -56,6 +56,8 @@ function App() {
 
         setTasks({...tasks, [todolistID]: tasks[todolistID].filter(t=> t.id !== id)})
     }
+
+
 
     const removeTodolist = (todolistID: string) => {
         setTodolists(todolists.filter(t=>t.id !== todolistID))
