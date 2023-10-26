@@ -41,3 +41,23 @@
 .error {
 
 }
+
+.todolist-wrapper{
+  display: flex;
+  gap: 30px;
+  padding: 100px 0;
+}
+
+.todoList{
+  padding: 10px;
+  border-radius: 15px;
+  background-color: #ffebc8;
+}
+
+.task{
+  margin-top: 10px;
+}
+
+.addItemForm{
+  margin-top: 10px;
+}

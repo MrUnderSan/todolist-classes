@@ -39,7 +39,7 @@ export const AddItemForm = (props: PropsType) => {
 
 
     return (
-        <div>
+        <div className={'addItemForm'}>
             <input
                 value={value}
                 onChange={onChangeHandler}

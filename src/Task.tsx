@@ -1,13 +1,13 @@
 import React, {FC} from 'react';
-import {TaskType} from './App';
 import {Button} from './Button';
 import {EditableSpan} from './components/EditableSpan';
+import {TaskType} from './store/tasks-reducer';
 
 type PropsType = {
     task: TaskType
-    changeTaskStatus: (id: number, isDone: boolean) => void
-    removeTask: (id: number) => void
-    changeTaskTitle: (id: number, title: string) => void
+    changeTaskStatus: (id: string, isDone: boolean) => void
+    removeTask: (id: string) => void
+    changeTaskTitle: (id: string, title: string) => void
 }
 
 
@@ -20,7 +20,7 @@ export const Task: FC<PropsType> = (props) => {
     }
 
     return (
-        <div key={props.task.id}>
+        <div key={props.task.id} className={'task'}>
 
             <input type={'checkbox'} checked={props.task.isDone}
                    onChange={(e) => props.changeTaskStatus(props.task.id, e.currentTarget.checked)}/>

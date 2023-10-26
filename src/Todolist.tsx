@@ -1,19 +1,18 @@
-import React, {KeyboardEvent, ChangeEvent, FC, useState} from 'react';
+import React, {FC} from 'react';
 import {Task} from './Task';
-import {TaskType} from './App';
-import {Button} from './Button';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './components/EditableSpan';
+import {TaskType} from './store/tasks-reducer';
 
 type PropsType = {
     todolistId: string
     title: string
     tasks: TaskType[]
-    changeTaskStatus: (id: number, isDone: boolean) => void
-    removeTask: (todolistID: string, id: number) => void
+    changeTaskStatus: (id: string, isDone: boolean) => void
+    removeTask: (todolistID: string, id: string) => void
     removeTodolist: (todolistID: string) => void
     addTask: (todolistId: string, title: string) => void
-    changeTaskTitle: (todolistId: string, taskId: number, title: string) => void
+    changeTaskTitle: (todolistId: string, taskId: string, title: string) => void
     changeTodolistTitle: (todolistId: string, title: string) => void
 }
 
@@ -28,7 +27,7 @@ export const Todolist: FC<PropsType> = (props) => {
         props.addTask(props.todolistId, value)
     }
 
-    const changeTaskTitleHandler = (taskId: number, title: string) => {
+    const changeTaskTitleHandler = (taskId: string, title: string) => {
         props.changeTaskTitle(props.todolistId, taskId, title)
     }
 
@@ -37,12 +36,12 @@ export const Todolist: FC<PropsType> = (props) => {
     }
 
     return (
-        <div>
+        <div className='todoList'>
             <button onClick={removeTodolistHandler}>x</button>
             <EditableSpan title={props.title} callback={changeTodolistTitleHandler} />
             <AddItemForm addItem={addTask}/>
             {props.tasks.map((ts) => {
-                const removeTaskHandler = (id: number) => props.removeTask(props.todolistId, id)
+                const removeTaskHandler = (id: string) => props.removeTask(props.todolistId, id)
                 // вариант с передачей todolistId в Todolist
 
                 return (
