@@ -1,30 +1,35 @@
-import React, {FC} from 'react';
+import React, {ChangeEvent, FC} from 'react';
 import {Button} from './Button';
 import {EditableSpan} from './components/EditableSpan';
-import {TaskType} from './store/tasks-reducer';
+import {changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, TaskType} from './store/tasks-reducer';
+import {useDispatch} from 'react-redux';
 
 type PropsType = {
+    todolistId: string
     task: TaskType
-    changeTaskStatus: (id: string, isDone: boolean) => void
-    removeTask: (id: string) => void
-    changeTaskTitle: (id: string, title: string) => void
 }
-
 
 export const Task: FC<PropsType> = (props) => {
 
-    const removeTaskHandler = () => props.removeTask(props.task.id)
+    const dispatch = useDispatch()
+
+    const removeTaskHandler = () => {
+        dispatch(removeTaskAC(props.todolistId, props.task.id))
+    }
 
     const changeTitleHandler = (title: string) => {
-        props.changeTaskTitle(props.task.id, title)
+        dispatch(changeTaskTitleAC(props.todolistId, props.task.id, title))
+    }
+
+    const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
+        dispatch(changeTaskStatusAC(props.todolistId, props.task.id, e.currentTarget.checked))
     }
 
     return (
         <div key={props.task.id} className={'task'}>
 
             <input type={'checkbox'} checked={props.task.isDone}
-                   onChange={(e) => props.changeTaskStatus(props.task.id, e.currentTarget.checked)}/>
-            {/*<span>{props.task.title}</span>*/}
+                   onChange={changeTaskStatus}/>
             <EditableSpan title={props.task.title} callback={changeTitleHandler}/>
             <Button name={'x'} callback={removeTaskHandler}/>
         </div>

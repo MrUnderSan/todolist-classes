@@ -10,9 +10,9 @@ export const AddItemForm = (props: PropsType) => {
     const [value, setValue] = useState('')
     const [error, setError] = useState<string | null>(null)
 
-
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setValue(e.currentTarget.value)
+        setError(null)
     }
 
     const addTask = () => {
@@ -22,7 +22,6 @@ export const AddItemForm = (props: PropsType) => {
         } else {
             setError('text is empty')
         }
-
     }
 
     const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -36,7 +35,6 @@ export const AddItemForm = (props: PropsType) => {
             setError('text is empty')
         }
     }
-
 
     return (
         <div className={'addItemForm'}>

@@ -1,5 +1,5 @@
 import {
-    addTodolistAC,
+    addTodolistAC, changeFilterAC,
     changeTodolistTitleAC,
     removeTodolistAC,
     todolistReducer,
@@ -44,4 +44,14 @@ test('correct todolist title should be changed', ()=> {
     expect(todolists[0].title).toBe('Todolist 1')
     expect(endState[1].title).toBe('Todolist 2')
 
+})
+
+test('correct filter in correct todolist should be changed', ()=> {
+
+    const action = changeFilterAC(todolist1, 'active')
+
+    const endState = todolistReducer(todolists, action)
+
+    expect(todolists[0].filter).toBe('all')
+    expect(endState[0].filter).toBe('active')
 })

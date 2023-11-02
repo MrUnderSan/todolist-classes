@@ -13,7 +13,13 @@ export type TasksType = {
 
 const REMOVE_TASK = 'REMOVE-TASK' as const
 
-type ActionsType = addTaskACType | removeTaskACType | changeTaskTitleACType | changeTaskStatusACType | RemoveTodolistACType | AddTodolistACType
+type ActionsType =
+    addTaskACType
+    | removeTaskACType
+    | changeTaskTitleACType
+    | changeTaskStatusACType
+    | RemoveTodolistACType
+    | AddTodolistACType
 
 
 const initState: TasksType = {}
@@ -54,7 +60,6 @@ export const tasksReducer = (state = initState, action: ActionsType): TasksType 
             return stateCopy
         case 'ADD-TODOLIST':
             return {...state, [action.payload.id]: []}
-
         default:
             return state
     }
