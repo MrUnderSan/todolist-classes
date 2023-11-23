@@ -1,8 +1,8 @@
 import React, {ChangeEvent, FC} from 'react';
 import {Button} from './Button';
 import {EditableSpan} from './components/EditableSpan';
-import {changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, TaskType} from './store/tasks-reducer';
-import {useDispatch} from 'react-redux';
+import {changeTaskStatusAC, removeTaskAC, TaskType, updateTask} from './store/tasks-reducer';
+import {useAppDispatch} from './store/hooks';
 
 type PropsType = {
     todolistId: string
@@ -11,14 +11,14 @@ type PropsType = {
 
 export const Task: FC<PropsType> = (props) => {
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const removeTaskHandler = () => {
         dispatch(removeTaskAC(props.todolistId, props.task.id))
     }
 
     const changeTitleHandler = (title: string) => {
-        dispatch(changeTaskTitleAC(props.todolistId, props.task.id, title))
+        dispatch(updateTask(props.todolistId, props.task.id, {title}))
     }
 
     const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {

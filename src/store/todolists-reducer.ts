@@ -1,4 +1,6 @@
 import {v1} from 'uuid';
+import {todolistApi, TodolistResponseType} from '../api/todolist-api';
+import {AppDispatchType, AppThunk} from './store';
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
 
@@ -8,12 +10,14 @@ export type TodolistType = {
     filter: FilterValuesType
 }
 
-type ActionsType = RemoveTodolistACType | AddTodolistACType | ChangeTodolistTitleACType | ChangeTodolistFilterACType
+type ActionsType = RemoveTodolistACType | AddTodolistACType | ChangeTodolistTitleACType | ChangeTodolistFilterACType | SetTodolistACType
 
 const initState: TodolistType[] = []
 
 export const todolistReducer = (state = initState, action: ActionsType): TodolistType[] => {
     switch (action.type) {
+        case 'SET-TODOLIST':
+            return action.todolists.map(tl => ({...tl, filter: 'all'}))
         case 'REMOVE-TODOLIST':
             return state.filter(t=> t.id !== action.payload.id)
         case 'ADD-TODOLIST':
@@ -75,3 +79,21 @@ export const changeFilterAC = (todolistId: string, filter: FilterValuesType) => 
 }
 
 export type ChangeTodolistFilterACType = ReturnType<typeof changeFilterAC>
+
+export const SetTodolistAC = (todolists: TodolistResponseType[]) => {
+    return {
+        type: 'SET-TODOLIST',
+        todolists
+    } as const
+}
+
+export type SetTodolistACType = ReturnType<typeof SetTodolistAC>
+
+export const fetchTodolists = (): AppThunk => async (dispatch) => {
+    try {
+        const res =  await todolistApi.fetchTodos()
+        dispatch(SetTodolistAC(res.data))
+    } catch (e) {
+        console.warn(e)
+    }
+}

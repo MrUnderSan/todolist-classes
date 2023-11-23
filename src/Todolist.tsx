@@ -1,12 +1,13 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import {Task} from './Task';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './components/EditableSpan';
-import {addTaskAC, TaskType} from './store/tasks-reducer';
+import {addTaskAC, getTasksTC, TaskType} from './store/tasks-reducer';
 import {TodolistButtons} from './components/TodolistButtons';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {RootStateType} from './store/store';
 import {changeTodolistTitleAC, FilterValuesType, removeTodolistAC, TodolistType} from './store/todolists-reducer';
+import {useAppDispatch} from './store/hooks';
 
 type PropsType = {
     todolist: TodolistType
@@ -18,7 +19,11 @@ export const Todolist: FC<PropsType> = ({todolist}) => {
 
     let tasks = useSelector<RootStateType, TaskType[]>(state => state.tasks[id])
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(getTasksTC(id))
+    }, []);
 
     const removeTodolistHandler = () => {
         dispatch(removeTodolistAC(id))

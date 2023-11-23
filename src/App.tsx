@@ -1,21 +1,26 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import {Todolist} from './Todolist';
 import {AddItemForm} from './AddItemForm';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {RootStateType} from './store/store';
-import {addTodolistAC, TodolistType} from './store/todolists-reducer';
+import {addTodolistAC, fetchTodolists, TodolistType} from './store/todolists-reducer';
+import {useAppDispatch} from './store/hooks';
 
 
 function App() {
 
     const todolists = useSelector<RootStateType, TodolistType[]>(state => state.todolists)
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const addTodolist = (title: string) => {
         dispatch(addTodolistAC(title))
     }
+
+    useEffect(() => {
+        dispatch(fetchTodolists())
+    }, []);
 
     const renderedTodolist = todolists.map(tl => {
         return (
