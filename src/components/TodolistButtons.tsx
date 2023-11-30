@@ -9,8 +9,6 @@ type PropsType = {
 
 export const TodolistButtons: FC<PropsType> = ({todolistId}) => {
 
-    console.log('TodolistButtons')
-
     const dispatch = useDispatch()
 
     const changeTodolistFilter = (filter: FilterValuesType) => {

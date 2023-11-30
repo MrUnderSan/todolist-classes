@@ -2,11 +2,12 @@ import {AnyAction, applyMiddleware, combineReducers, legacy_createStore} from 'r
 import {todolistReducer} from './todolists-reducer';
 import {tasksReducer} from './tasks-reducer';
 import thunk, {ThunkAction, ThunkDispatch} from 'redux-thunk';
-
+import {appReducer} from './app-reducer';
 
 const RootReducer = combineReducers({
     todolists: todolistReducer,
-    tasks: tasksReducer
+    tasks: tasksReducer,
+    app: appReducer
 })
 
 export const store = legacy_createStore(RootReducer, applyMiddleware(thunk))
