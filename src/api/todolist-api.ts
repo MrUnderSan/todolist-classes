@@ -11,10 +11,13 @@ export const todolistApi = {
     },
     updateTitle(id: string, title: string){
         return axiosInstance.put<null, AxiosResponse<ResponseType>, {title: string}>(`todo-lists/${id}`, {title})
+    },
+    addTodo(title: string){
+        return axiosInstance.post<null, AxiosResponse<ResponseType<{item: TodolistResponseType}>, {title: string}>>('todo-lists', {title})
     }
 }
 
-type ResponseType<D = {}> = {
+export type ResponseType<D = {}> = {
     data: D
     fieldsErrors: string[]
     messages: string[]

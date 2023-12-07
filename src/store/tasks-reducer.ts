@@ -1,5 +1,4 @@
-import {v1} from 'uuid';
-import {AddTodolistACType, RemoveTodolistACType, SetTodolistACType} from './todolists-reducer';
+import {AddTodolistACType, RemoveTodolistACType, ResetTodosType, SetTodolistACType} from './todolists-reducer';
 import {ModelTaskType, taskApi, TaskResponseType} from '../api/task-api';
 import {AppThunk, RootStateType} from './store';
 
@@ -23,6 +22,7 @@ type ActionsType =
     | SetTodolistACType
     | setTaskACType
     | UpdateTaskACType
+    | ResetTodosType
 
 const initState: TasksType = {}
 
@@ -84,7 +84,9 @@ export const tasksReducer = (state = initState, action: ActionsType): TasksType 
             delete stateCopy[action.payload.id]
             return stateCopy
         case 'ADD-TODOLIST':
-            return {...state, [action.payload.id]: []}
+            return {...state, [action.todolist.id]: []}
+        case 'RESET-TODOS':
+            return {}
         default:
             return state
     }
@@ -144,7 +146,7 @@ export const updateTaskAC = (todolistId: string, taskId: string, task: TaskRespo
 }
 
 
-const setTasksAC = (todolistId: string, tasks: TaskResponseType[]) => {
+export const setTasksAC = (todolistId: string, tasks: TaskResponseType[]) => {
     return {
         type: 'SET-TASKS',
         todolistId,
