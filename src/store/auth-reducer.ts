@@ -1,9 +1,9 @@
 import {AppThunk} from './store';
-import {changeAppStatusAC, changeInitializedStatusAC} from './app-reducer';
 import {AuthApi, LoginDataType} from '../api/auth-api';
 import {handleServerAppError, handleServerError} from '../utils/error-util';
-import {setTasksAC} from './tasks-reducer';
-import {resetTodos, SetTodolistAC} from './todolists-reducer';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {appActions} from './app-reducer';
+import {todolistsActions} from './todolists-reducer';
 
 type StateType = {
     isLoggedIn: boolean
@@ -11,56 +11,51 @@ type StateType = {
     login: string | null
 }
 
-const initState: StateType = {
+const initialState: StateType = {
     isLoggedIn: false,
     userId: null,
     login: null
 }
 
-export const authReducer = (state = initState, action: ActionsType): StateType => {
-    switch (action.type) {
-        case 'AUTH/LOGIN':
-            return {...state, isLoggedIn: true, userId: action.userId}
-        case 'AUTH/AUTH-ME':
-            return {...state,  isLoggedIn: action.isLoggedIn, login: action.login, userId: action.userId}
-        default:
-            return state
-    }
-}
+const slice = createSlice({
+    name: 'auth',
+    initialState,
+    reducers: {
+        login: (state, action: PayloadAction<{userId: number}>) => {
+            state.isLoggedIn = true
+            state.userId = action.payload.userId
+        },
+        authMe: (state, action: PayloadAction<{isLoggedIn: boolean, userId: number | null, login: string | null}>) => {
+            state.isLoggedIn = action.payload.isLoggedIn
+            state.userId = action.payload.userId
+            state.login = action.payload.login
+        }
+    },
+})
 
+export const AuthReducer = slice.reducer
+export const AuthActions = slice.actions
 
-
-const loginAC = (userId: number) => ({
-    type: 'AUTH/LOGIN',
-    userId
-} as const)
-
-const authMeAC = (isLoggedIn: boolean, userId: number | null, login: string | null) => ({
-    type: 'AUTH/AUTH-ME',
-    isLoggedIn,
-    userId,
-    login
-} as const)
 
 export const authMe = (): AppThunk => async (dispatch) => {
-    dispatch(changeAppStatusAC('loading'))
+    dispatch(appActions.changeAppStatus({appStatus: 'loading'}))
     try {
         const res = await AuthApi.authMe()
         if (res.data.resultCode === 0) {
-            dispatch(authMeAC(true, res.data.data.id, res.data.data.login))
+            dispatch(AuthActions.authMe({isLoggedIn: true, userId: res.data.data.id, login: res.data.data.login}))
         } else {
             handleServerAppError(dispatch, res.data)
         }
     } catch (e) {
         handleServerError(e, dispatch)
     } finally {
-        dispatch(changeAppStatusAC('idle'))
-        dispatch(changeInitializedStatusAC())
+        dispatch(appActions.changeAppStatus({appStatus: 'idle'}))
+        dispatch(appActions.changeInitializedStatus())
     }
 }
 
 export const login = (data: LoginDataType): AppThunk => async (dispatch) => {
-    dispatch(changeAppStatusAC('loading'))
+    dispatch(appActions.changeAppStatus({appStatus: 'loading'}))
     try {
         const res = await AuthApi.login(data)
         if (res.data.resultCode === 0) {
@@ -71,26 +66,24 @@ export const login = (data: LoginDataType): AppThunk => async (dispatch) => {
     } catch (e) {
         handleServerError(e, dispatch)
     } finally {
-        dispatch(changeAppStatusAC('idle'))
+        dispatch(appActions.changeAppStatus({appStatus: 'idle'}))
     }
 }
 
 export const logout = (): AppThunk => async (dispatch) => {
-    dispatch(changeAppStatusAC('loading'))
+    dispatch(appActions.changeAppStatus({appStatus: 'loading'}))
     try {
         const res = await AuthApi.logout()
         if (res.data.resultCode === 0) {
-            dispatch(authMeAC(false, null, null))
-            dispatch(resetTodos())
+            dispatch(AuthActions.authMe({isLoggedIn: false, userId: null, login: null}))
+            dispatch(todolistsActions.resetTodolist())
         } else {
             handleServerAppError(dispatch, res.data)
         }
     } catch (e) {
         handleServerError(e, dispatch)
     } finally {
-        dispatch(changeAppStatusAC('idle'))
-        dispatch(changeInitializedStatusAC())
+        dispatch(appActions.changeAppStatus({appStatus: 'idle'}))
+        dispatch(appActions.changeInitializedStatus())
     }
 }
-
-type ActionsType = ReturnType<typeof loginAC> | ReturnType<typeof authMeAC>

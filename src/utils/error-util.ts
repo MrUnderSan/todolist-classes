@@ -1,23 +1,22 @@
 import {isAxiosError} from 'axios';
-import {changeAppErrorAC} from '../store/app-reducer';
 import {Dispatch} from 'redux';
-import {ResponseType} from '../api/todolist-api';
+import {appActions} from '../store/app-reducer';
 
 export const handleServerError = (e: unknown, dispatch: Dispatch) => {
     if (isAxiosError<ErrorType>(e)) {
         const error = e.response ? e.response.data.messages[0] : e.message
-        dispatch(changeAppErrorAC(error))
+        dispatch(appActions.changeAppError({appError: error}))
     }
     else {
-        dispatch(changeAppErrorAC((e as Error).message))
+        dispatch(appActions.changeAppError({appError: ((e as Error).message)}))
     }
 }
 
 export const handleServerAppError = <D>(dispatch: Dispatch, data: ResponseType<D>) => {
     if (data.messages.length) {
-        dispatch(changeAppErrorAC(data.messages[0]))
+        dispatch(appActions.changeAppError({appError: data.messages[0]}))
     } else {
-        dispatch(changeAppErrorAC('Unknown error'))
+        dispatch(appActions.changeAppError({appError: 'Unknown error'}))
     }
 }
 
@@ -25,4 +24,11 @@ export type ErrorType = {
     "statusCode": number,
     "messages": string[],
     "error": string
+}
+
+type ResponseType<D = {}> = {
+    data: D
+    fieldsErrors?: string[]
+    messages: string[]
+    resultCode: number
 }

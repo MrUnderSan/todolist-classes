@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 
 const axiosInstance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -7,10 +7,13 @@ const axiosInstance = axios.create({
 
 export const taskApi = {
     getTask(todolistId: string) {
-        return axiosInstance.get<ResponseType<TaskResponseType[]>>(`/todo-lists/${todolistId}/tasks`)
+        return axiosInstance.get<GetResponseType<TaskResponseType[]>>(`/todo-lists/${todolistId}/tasks`)
     },
     updateTitle(todolistId: string, taskId: string, task: ModelTaskType) {
-        return axiosInstance.put<UpdateResponse<{item: TaskResponseType}>>(`todo-lists/${todolistId}/tasks/${taskId}`, task)
+        return axiosInstance.put<ResponseType<{item: TaskResponseType}>>(`todo-lists/${todolistId}/tasks/${taskId}`, task)
+    },
+    createTask(todolistId: string, title: string) {
+        return axiosInstance.post<null, AxiosResponse<ResponseType<{item: TaskResponseType}>>, {title: string}>(`todo-lists/${todolistId}/tasks`, {title})
     }
 }
 
@@ -36,13 +39,13 @@ export type TaskResponseType = {
     addedDate: string
 }
 
-export type ResponseType <D = []> = {
+export type GetResponseType <D = []> = {
     items: D
     totalCount: number
     error: string
 }
 
-export type UpdateResponse <D = {}> = {
+export type ResponseType <D = {}> = {
     resultCode: number
     messages: Array<string>
     data: D

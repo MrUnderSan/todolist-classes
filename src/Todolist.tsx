@@ -2,11 +2,11 @@ import React, {FC, useEffect} from 'react';
 import {Task} from './Task';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './components/EditableSpan';
-import {addTaskAC, getTasksTC, TaskType} from './store/tasks-reducer';
+import {createTask, getTasksTC, TaskType} from './store/tasks-reducer';
 import {TodolistButtons} from './components/TodolistButtons';
 import {useSelector} from 'react-redux';
 import {RootStateType} from './store/store';
-import {FilterValuesType, removeTodolistAC, TodolistType, updateTodolistTitle} from './store/todolists-reducer';
+import {FilterValuesType, todolistsActions, TodolistType, updateTodolistTitle} from './store/todolists-reducer';
 import {useAppDispatch} from './store/hooks';
 
 type PropsType = {
@@ -26,11 +26,11 @@ export const Todolist: FC<PropsType> = ({todolist}) => {
     }, []);
 
     const removeTodolistHandler = () => {
-        dispatch(removeTodolistAC(id))
+        dispatch(todolistsActions.removeTodolist({id}))
     }
 
     const addTask = (value: string) => {
-        dispatch(addTaskAC(id, value))
+        dispatch(createTask(id, value))
     }
 
     const changeTodolistTitleHandler = (title: string) => {

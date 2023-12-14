@@ -1,3 +1,5 @@
+// @ts-ignore
+
 import {removeTodolistAC, TodolistType} from './todolists-reducer';
 import {tasksReducer, TasksType} from './tasks-reducer';
 

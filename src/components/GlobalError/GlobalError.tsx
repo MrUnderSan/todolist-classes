@@ -3,7 +3,7 @@ import {ToastContainer, toast} from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
-import {changeAppErrorAC} from '../../store/app-reducer';
+import {appActions} from '../../store/app-reducer';
 
 
 export const GlobalError = () => {
@@ -13,7 +13,8 @@ export const GlobalError = () => {
 
     useEffect(() => {
         error && toast.error(error)
-        dispatch(changeAppErrorAC(null))
+        dispatch(appActions.changeAppError({appError: null}))
+
     }, [error]);
 
     return (
