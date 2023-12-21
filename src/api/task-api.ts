@@ -9,12 +9,18 @@ export const taskApi = {
     getTask(todolistId: string) {
         return axiosInstance.get<GetResponseType<TaskResponseType[]>>(`/todo-lists/${todolistId}/tasks`)
     },
-    updateTitle(todolistId: string, taskId: string, task: ModelTaskType) {
-        return axiosInstance.put<ResponseType<{item: TaskResponseType}>>(`todo-lists/${todolistId}/tasks/${taskId}`, task)
+    updateTask(model: updateTitleApiType) {
+        return axiosInstance.put<ResponseType<{item: TaskResponseType}>>(`todo-lists/${model.todolistId}/tasks/${model.taskId}`, model.task)
     },
     createTask(todolistId: string, title: string) {
         return axiosInstance.post<null, AxiosResponse<ResponseType<{item: TaskResponseType}>>, {title: string}>(`todo-lists/${todolistId}/tasks`, {title})
     }
+}
+
+export type updateTitleApiType = {
+    todolistId: string,
+    taskId: string,
+    task: ModelTaskType
 }
 
 export type ModelTaskType = {

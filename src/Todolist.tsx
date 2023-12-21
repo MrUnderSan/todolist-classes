@@ -6,7 +6,7 @@ import {createTask, getTasksTC, TaskType} from './store/tasks-reducer';
 import {TodolistButtons} from './components/TodolistButtons';
 import {useSelector} from 'react-redux';
 import {RootStateType} from './store/store';
-import {FilterValuesType, todolistsActions, TodolistType, updateTodolistTitle} from './store/todolists-reducer';
+import {FilterValuesType, todolistsThunk, TodolistType} from './store/todolists-reducer';
 import {useAppDispatch} from './store/hooks';
 
 type PropsType = {
@@ -26,7 +26,7 @@ export const Todolist: FC<PropsType> = ({todolist}) => {
     }, []);
 
     const removeTodolistHandler = () => {
-        dispatch(todolistsActions.removeTodolist({id}))
+        dispatch(todolistsThunk.removeTodo(id))
     }
 
     const addTask = (value: string) => {
@@ -34,7 +34,7 @@ export const Todolist: FC<PropsType> = ({todolist}) => {
     }
 
     const changeTodolistTitleHandler = (title: string) => {
-        dispatch(updateTodolistTitle(id, title))
+        dispatch(todolistsThunk.updateTodolistTitle({id, title}))
     }
 
     const getTasksForRender = (tasks: TaskType[], filter: FilterValuesType) => {

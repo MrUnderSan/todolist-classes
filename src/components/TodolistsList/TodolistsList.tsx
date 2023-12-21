@@ -1,6 +1,6 @@
 import React, {FC, useEffect} from 'react'
 import {AddItemForm} from '../../AddItemForm';
-import {addTodo, fetchTodolists, TodolistType} from '../../store/todolists-reducer';
+import {todolistsThunk, TodolistType} from '../../store/todolists-reducer';
 import {Todolist} from '../../Todolist';
 import {useSelector} from 'react-redux';
 import {RootStateType} from '../../store/store';
@@ -14,11 +14,11 @@ export const TodolistsList: FC = () => {
     const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
 
     useEffect(() => {
-        dispatch(fetchTodolists())
+        dispatch(todolistsThunk.fetchTodolists())
     }, []);
 
     const addTodolist = (title: string) => {
-        dispatch(addTodo(title))
+        dispatch(todolistsThunk.addTodo(title))
     }
 
     const renderedTodolist = todolists.map(tl => {

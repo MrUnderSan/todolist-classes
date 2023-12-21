@@ -1,7 +1,7 @@
 import React, {ChangeEvent, FC} from 'react';
 import {Button} from './Button';
 import {EditableSpan} from './components/EditableSpan';
-import {TaskType, updateTask} from './store/tasks-reducer';
+import {tasksThunk, TaskType} from './store/tasks-reducer';
 import {useAppDispatch} from './store/hooks';
 
 type PropsType = {
@@ -18,11 +18,11 @@ export const Task: FC<PropsType> = (props) => {
     }
 
     const changeTitleHandler = (title: string) => {
-        dispatch(updateTask(props.todolistId, props.task.id, {title}))
+        dispatch(tasksThunk.updateTask({todolistId: props.todolistId, taskId: props.task.id, model: {title}}))
     }
 
     const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
-        // dispatch(changeTaskStatusAC(props.todolistId, props.task.id, e.currentTarget.checked))
+        dispatch(tasksThunk.updateTask({todolistId: props.todolistId, taskId: props.task.id, model: {status: e.currentTarget.checked ? 2 : 0}}))
     }
 
     return (

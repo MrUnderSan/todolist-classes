@@ -14,6 +14,9 @@ export const todolistApi = {
     },
     addTodo(title: string){
         return axiosInstance.post<null, AxiosResponse<ResponseType<{item: TodolistResponseType}>, {title: string}>>('todo-lists', {title})
+    },
+    removeTodo(id: string) {
+        return axiosInstance.delete<ResponseType>(`todo-lists/${id}`)
     }
 }
 
